@@ -1,5 +1,25 @@
 {% set title = "Open Music Review - Account Creation" %}
 {% extends "base.html" %}
 {%block main%}
-
+<div class="login-container">
+  <h2>Create Account</h2>
+  <form method="post" action="{{ url_for('create_account_action') }}">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <div class="form-group">
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password" required>
+    </div>
+    <button type="submit" class="login-btn">Sign Up</button>
+  </form>
+  <div class="form-link">
+    Already have an account? <a href="{{ url_for('login_page') }}">Login</a>
+  </div>
+</div>
 {%endblock main%}
