@@ -10,13 +10,12 @@
 </head>
 <body>
     <header>
-        <h1></h1>
         <nav>
           <div class="topnav" id="myTopnav">
                 <a href="{{ url_for('index') }}" class="active">Home</a>
                 <a href="{{ url_for('review') }}">Reviews</a>
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('create_review') }}">Leave Review</a>
+                <a href="{{ url_for('create_review') }}">Post Review</a>
                 <a href="{{ url_for('logout_action') }}">Logout</a>
                 <a href="{{ url_for('contact') }}">Contact Us</a>
             {% else %}
@@ -33,15 +32,13 @@
         </nav>
     </header>
     <main>
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class="flashes">
-          {% for message in messages %}
-            <li>{{ message }}</li>
-          {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
+      {% if get_flashed_messages() %}
+        <div class="flash-messages">
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+        <div class="flash {{ category }}">{{ message }}</div>
+  {% endfor %}
+        </div>
+{% endif %}
 
       {% block main %}{% endblock %}
     </main>
