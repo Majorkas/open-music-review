@@ -57,7 +57,7 @@ def login_action():
         flash(f"No such user '{username}'")
         return redirect(url_for("login_page"))
     if user.validate_password(password) == False:
-        flash(f"Invalid password for the user '{username}'")
+        flash(f"Invalid password for the user '{username}'", "error")
         return redirect(url_for("login_page"))
 
     login_user(user)
@@ -74,17 +74,24 @@ def create_account():
 def create_account_action():
     username = request.form["username"]
     password = request.form["password"]
-    if User.query.filter_by(username=username).first():
-        flash(f"The username '{username}' is already taken")
-        return redirect(url_for("create_account"))
+    confirm = request.form["confirm_password"]
 
-    user = User(username=username) #type: ignore
-    user.hash_password(password)
-    db.session.add(user)
-    db.session.commit()
-    login_user(user)
-    flash(f"Welcome to Open Music Review {username}!")
-    return redirect(url_for("index"))
+
+
+    if User.query.filter_by(username=username).first():
+        flash(f"The username '{username}' is already taken", "error")
+        return redirect(url_for("create_account"))
+    if password != confirm:
+            flash("Passwords do not match please try again", "error")
+            return redirect(url_for("create_account"))
+    else:
+        user = User(username=username) #type: ignore
+        user.hash_password(password)
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        flash(f"Welcome to Open Music Review {username}!")
+        return redirect(url_for("index"))
 
 
 @app.route("/logout", methods=["POST"])
@@ -109,16 +116,18 @@ def create_review():
 @login_required
 def create_review_action():
     review = Review (
-        artist = request.form["artist"], #type: ignore
-        title = request.form["title"], #type: ignore
-        content = request.form["content"], #type: ignore
-        score = request.form["score"], #type: ignore
-        song_link = request.form["song-link"], #type: ignore
-        author = current_user #type: ignore
-    )
+
+            artist = request.form["artist"], #type: ignore
+            title = request.form["title"], #type: ignore
+            album = request.form["album"], #type:ignore
+            content = request.form["content"], #type: ignore
+            score = request.form["score"], #type: ignore
+            song_link = request.form["spotify_link"], #type: ignore
+            author = current_user #type: ignore
+        )
     db.session.add(review)
     db.session.commit()
-    return render_template("reviews.html", review=Review.query.all())
+    return render_template("reviews.html", reviews=Review.query.all())
 
 
 @app.route("/contact", methods=["GET"])
@@ -134,27 +143,34 @@ def contact_action():
         user = current_user, #type: ignore
         name = request.form["name"], #type: ignore
         email = request.form["email"], #type: ignore
-        message = request.form["message"] #type: ignore
+        message = request.form["message"], #type: ignore
+        user_id = current_user.id #type: ignore
     )
     db.session.add(form)
     db.session.commit()
-    flash(f"Thank you {current_user}, We have recieved your message and hope to get back to you soon")
+    flash(f"Thank you {current_user.username}, We have recieved your message and hope to get back to you soon")
 
     return redirect(url_for("index"))
 
 
-@app.route("/report", methods=["GET"])
+@app.route("/report/<int:review_id>", methods=["GET"])
 @login_required
-def report():
-    return render_template("report.html")
+def report(review_id):
+    review = Review.query.filter_by(id = review_id).first()
+    if not review:
+        flash("Review not found", "error")
+        return redirect(url_for("review"))
+    return render_template("report.html", review=review)
 
 
-@app.route("/report", methods=["POST"])
+@app.route("/report/<int:review_id>", methods=["POST"])
 @login_required
-def report_action():
-    review_id = request.form["review_id"]
-    # make sure the review exists
-    review = Review.query.get_or_404(int(review_id))
+def report_action(review_id):
+
+    review = Review.query.filter_by(id = review_id).first()
+    if not review:
+        flash("Review not found", "error")
+        return redirect(url_for("review"))
     report = User_Report(
         reporter = current_user, #type: ignore
         reason = request.form["report"], #type: ignore
@@ -162,20 +178,29 @@ def report_action():
     )
     db.session.add(report)
     db.session.commit()
-    flash(f"Report {report.id} on {review_id} submitted, Thank You!")
-    return render_template("index.html")
+    flash(f"Report ID:{report.id} on Review:{review_id} submitted, Thank You!")
+    return redirect(url_for("review"))
 
-@app.route("/adminView")
+@app.route("/AdminView")
+@login_required
 def admin_page():
+    '''
+    renders the admin page but firsts checks to see if the current user
+    is allowed to view the page by checking the bool is not false
+    '''
     user = current_user
     if user.admin == False:
         flash("User Not Authorised")
         return redirect(url_for("index"))
     else:
-        return render_template("adminView.html", form = Form_Submission.query.all(), reports = User_Report.query.all())
+        return render_template("admin_view.html", forms = Form_Submission.query.all(), reports = User_Report.query.all())
 
 @app.errorhandler(NotFound)
 def page_not_found(error_message):
+    '''
+    404 Error Handling for if the user types in the wrong
+    url if entering manually
+    '''
     attempted_url = request.path
     return render_template("404.html", attempted_url=attempted_url), 404
 
