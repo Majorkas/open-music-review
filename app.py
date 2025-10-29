@@ -33,21 +33,13 @@ with app.test_request_context():
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-def allow_edit(review):
-    return review.author == current_user
-
 @app.route("/")
 def index():
     # picks random review to display as the
     # featured review on the home page
     reviews = Review.query.all()
-    amount_of_reviews = len(reviews)
-    if amount_of_reviews > 1 :
-        random_id = random.choice(range(1, amount_of_reviews,1))
-        random_review = Review.query.filter_by(id = random_id).first()
-        return render_template("index.html", featured_review = random_review)
-    else:
-        return render_template("index.html")
+    random_review = random.choice(reviews) if reviews else None
+    return render_template("index.html", featured_review=random_review)
 
 
 @app.route("/login", methods=["GET"])
