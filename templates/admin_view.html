@@ -1,0 +1,31 @@
+{% set title = "Open Music Review - Admin Panel" %}
+{% extends "base.html" %}
+{%block main%}
+<div class="admin-container">
+  <h2 class="admin-title">Form Submissions</h2>
+
+  {% if forms|length == 0 %}
+    <div class="submission-card">
+      <p class="submission-empty">No submissions yet.</p>
+    </div>
+  {% else %}
+    {% for form in forms %}
+      <article class="submission-card">
+        <div class="submission-header">
+          <h3 class="submission-name">{{ form.name }}</h3>
+          <a class="submission-email" href="mailto:{{ form.email }}">{{ form.email }}</a>
+        </div>
+
+        <div class="submission-meta">
+          Submitted by: <span class="submission-user">{{ form.user.username }}</span>
+          <span class="submission-id">User ID: {{ form.user_id }}</span>
+        </div>
+
+        <div class="submission-message">
+          {{ form.message }}
+        </div>
+      </article>
+    {% endfor %}
+  {% endif %}
+</div>
+{%endblock%}
