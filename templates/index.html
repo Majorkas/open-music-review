@@ -1,8 +1,17 @@
 {% set title = "Open Music Review - Home" %}
 {% extends "base.html" %}
 {%block main%}
+<div class="home-header">
+  <img class='logo-image' src="../static/images/logo.png" alt='main logo'>
+  <h1>Open Music Review</h1>
+  <p>Welcome to the 'Open Music Review' a site dedicated to Music Reviews by the people for the people completely independant so you can
+    get the truth about new releases or discover new songs to add to your playlist with our spotify integration you can easily listen
+    to snippets of each song and add them directly to your playlist<br> See below our featured review!
+  </p>
+</div>
 {% if featured_review %}
 <article class="review-card">
+  <h2 class="featured-review-heading">Featured Review</h2>
       <div class="review-header">
         <h2 class="review-title">{{ featured_review.title }}</h2>
         <span class="score-badge">{{ featured_review.score }}/10</span>
