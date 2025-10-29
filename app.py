@@ -161,6 +161,38 @@ def report(review_id):
         return redirect(url_for("review"))
     return render_template("report.html", review=review)
 
+@app.route("/delete/<int:review_id>", methods=["GET"])
+@login_required
+def delete_review(review_id):
+    review = Review.query.filter_by(id = review_id).first()
+    if not review:
+        flash("Review not found", "error")
+        return redirect(url_for("admin_page"))
+    if current_user.admin == False:
+        flash("Not authorized to delete this review", "error")
+        return redirect(url_for("index"))
+    User_Report.query.filter_by(review_id=review.id).delete()
+    db.session.delete(review)
+    db.session.commit()
+    flash("Review Removed")
+    return redirect(url_for("admin_page"))
+
+@app.route("/ignore/<int:report_id>", methods=["GET"])
+@login_required
+def ignore_report(report_id):
+    report = User_Report.query.filter_by(id = report_id)
+    if not report:
+        flash("Report not found", "error")
+        return redirect(url_for("admin_page"))
+    if current_user.admin == False:
+        flash("Not authorized to ignore this report", "error")
+        return redirect(url_for("index"))
+    report.delete()
+    db.session.commit()
+    flash("Report Ignored")
+    return redirect(url_for("admin_page"))
+
+
 
 @app.route("/report/<int:review_id>", methods=["POST"])
 @login_required
