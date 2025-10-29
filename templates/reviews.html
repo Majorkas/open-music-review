@@ -2,6 +2,11 @@
 {% extends "base.html" %}
 {%block main%}
 <div class="reviews-container">
+  {% if reviews|length == 0 %}
+    <div class="submission-card">
+      <p class="submission-empty">No Reviews posted yet.</p>
+    </div>
+  {% else %}
   {% for review in reviews %}
     <article class="review-card">
       <div class="review-header">
@@ -33,5 +38,6 @@
       </div>
     </article>
   {% endfor %}
+  {% endif %}
 </div>
 {%endblock main%}
