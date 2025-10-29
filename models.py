@@ -18,6 +18,9 @@ class User(UserMixin, db.Model):
     def __str__(self):
         return f"This User is '{self.username}'"
 
+    def make_admin(self):
+        self.admin = True
+        return self.admin
 
     def hash_password(self, unhashed_password: str):
         self.password = generate_password_hash(unhashed_password)
@@ -28,8 +31,9 @@ class User(UserMixin, db.Model):
 
 class Review(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    artist: Mapped[str] = mapped_column(primary_key=True)
+    artist: Mapped[str] = mapped_column(nullable=False)
     title: Mapped[str] = mapped_column(nullable=False)
+    album: Mapped[str] = mapped_column(nullable=False)
     content: Mapped[str] = mapped_column(nullable=False)
     score: Mapped[int] = mapped_column(nullable=False)
     song_link: Mapped[str] = mapped_column(nullable=False)
