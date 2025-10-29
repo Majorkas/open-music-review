@@ -54,7 +54,7 @@ class Review(db.Model):
 
 class User_Report(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
-    reason: Mapped[int] = mapped_column(nullable=False)
+    reason: Mapped[str] = mapped_column(nullable=False)
 
     reporter_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     review_id: Mapped[int] = mapped_column(ForeignKey("review.id"), nullable=False)
