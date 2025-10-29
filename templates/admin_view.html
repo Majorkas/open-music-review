@@ -28,4 +28,35 @@
     {% endfor %}
   {% endif %}
 </div>
+<div class="admin-container">
+  <h2 class="admin-title">User Reports</h2>
+{% if reports|length == 0 %}
+    <div class="submission-card">
+      <p class="submission-empty">No Reports yet.</p>
+    </div>
+  {% else %}
+    {% for report in reports %}
+      <article class="submission-card">
+        <div class="submission-header">
+          <h3 class="submission-name">Report ID:{{ report.id }}</h3>
+
+
+        <div class="submission-meta">
+          Submitted by: <span class="submission-user">{{ report.reporter.username }}</span>
+          <span class="submission-id">User ID: {{ report.reporter_id }}</span>
+        </div>
+
+        <div class="submission-message">
+          {{ report.reason }}
+        </div>
+        <div class="review-actions">
+        <a href="{{ url_for('delete_review', review_id = report.review_id) }}">Delete Review</a>
+      </div>
+      <div class="review-actions">
+        <a href="{{ url_for('ignore_report', report_id = report.id) }}">Ignore</a>
+      </div>
+    </article>
+    {% endfor %}
+  {% endif %}
+</div>
 {%endblock%}
