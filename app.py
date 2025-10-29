@@ -21,6 +21,13 @@ with app.app_context():
     db.init_app(app)
     db.create_all()
 
+with app.test_request_context():
+    '''Make default Admin user so you can access the admin panel'''
+    admin = User(username="Admin") #type: ignore
+    admin.hash_password("admin")
+    admin.make_admin()
+    db.session.add(admin)
+    db.session.commit()
 
 @login_manager.user_loader
 def load_user(user_id):
