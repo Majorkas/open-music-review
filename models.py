@@ -14,6 +14,7 @@ class User(UserMixin, db.Model):
 
     reviews = db.relationship('Review', back_populates='author')
     reports = db.relationship('User_Report', back_populates='reporter')
+    form_submissions = db.relationship('Form_Submission', back_populates='user')
     def __str__(self):
         return f"This User is '{self.username}'"
 
@@ -51,6 +52,7 @@ class User_Report(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
     reason: Mapped[int] = mapped_column(nullable=False)
 
+    reporter_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     review_id: Mapped[int] = mapped_column(ForeignKey("review.id"), nullable=False)
 
     reporter = db.relationship('User', back_populates='reports')
@@ -59,8 +61,17 @@ class User_Report(db.Model):
         return f'{self.reporter.username} reported {self.review_id} because: {self.reason}'
 
 
-class Form_submission(db.Model):
+class Form_Submission(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
     email: Mapped[str] = mapped_column(nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
     message: Mapped[str] =mapped_column(nullable=False)
+
+    user = db.relationship('User', back_populates='form_submissions')
+    def __str__(self):
+        return f'''
+        {self.name}
+        {self.email}
+        {self.message}
+        '''
