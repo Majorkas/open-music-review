@@ -1,5 +1,34 @@
 {% set title = "Open Music Review - Home" %}
 {% extends "base.html" %}
 {%block main%}
-
+{% if featured_review %}
+<article class="review-card">
+      <div class="review-header">
+        <h2 class="review-title">{{ featured_review.title }}</h2>
+        <span class="score-badge">{{ featured_review.score }}/10</span>
+      </div>
+      <div class="review-album">From the album {{ featured_review.album }} by {{ featured_review.artist }}</div>
+      <div class="review-meta">
+        Written by {{ featured_review.author.username }}
+      </div>
+      <div class="review-content">
+        {{ featured_review.content }}
+      </div>
+        <div class="review-embed">
+          <iframe
+            data-testid="embed-iframe"
+            style="border-radius:12px"
+            src="{{ featured_review.get_song_embed_code() }}"
+            width="100%"
+            height="152"
+            frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        </div>
+        {%else%}
+        <div class="submission-card">
+      <p class="submission-empty">No Reviews posted yet.</p>
+    </div>
+        {%endif%}
 {%endblock main%}
