@@ -1,5 +1,37 @@
 {% set title = "Open Music Review - Reviews" %}
 {% extends "base.html" %}
 {%block main%}
+<div class="reviews-container">
+  {% for review in reviews %}
+    <article class="review-card">
+      <div class="review-header">
+        <h2 class="review-title">{{ review.title }}</h2>
+        <span class="score-badge">{{ review.score }}/10</span>
+      </div>
+      <div class="review-album">From the album {{ review.album }} by {{ review.artist }}</div>
+      <div class="review-meta">
+        Written by {{ review.author.username }}
+      </div>
+      <div class="review-content">
+        {{ review.content }}
+      </div>
+        <div class="review-embed">
+          <iframe
+            data-testid="embed-iframe"
+            style="border-radius:12px"
+            src="{{ review.get_song_embed_code() }}"
+            width="100%"
+            height="152"
+            frameborder="0"
+            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+            loading="lazy">
+          </iframe>
+        </div>
 
+      <div class="review-actions">
+        <a href="{{ url_for('report', review_id=review.id) }}">Report</a>
+      </div>
+    </article>
+  {% endfor %}
+</div>
 {%endblock main%}
