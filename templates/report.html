@@ -1,5 +1,18 @@
 {% set title = "Open Music Review - Report" %}
 {% extends "base.html" %}
 {%block main%}
+ <form method="post" action="{{ url_for('report_action', review_id = review.id) }}">
 
+    <div class="form-group">
+      <label for="report">Reason for Report</label>
+      <textarea id="report" name="report" rows="6" required placeholder="Please describe why you're reporting this review..."></textarea>
+    </div>
+
+    <button type="submit" class="login-btn">Submit Report</button>
+  </form>
+
+  <div class="form-link">
+    <a href="{{ url_for('review') }}">Cancel</a>
+  </div>
+</div>
 {%endblock main%}
