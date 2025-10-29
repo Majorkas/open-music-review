@@ -1,5 +1,34 @@
 {% set title = "Open Music Review - Create Review" %}
 {% extends "base.html" %}
 {%block main%}
-
+<div class="login-container">
+  <h2>Post a Song Review</h2>
+  <form method="post" action="{{ url_for('create_review_action') }}">
+    <div class="form-group">
+      <label for="title">Song Title</label>
+      <input type="text" id="title" name="title" required>
+    </div>
+    <div class="form-group">
+      <label for="artist">Artist</label>
+      <input type="text" id="artist" name="artist" required>
+    </div>
+    <div class="form-group">
+      <label for="album">Album </label>
+      <input type="text" id="album" name="album" required>
+    </div>
+    <div class="form-group">
+      <label for="spotify_link">Spotify Link </label>
+      <input type="url" id="spotify_link" name="spotify_link" placeholder="https://open.spotify.com/track/..." required>
+    </div>
+    <div class="form-group">
+      <label for="score">Score (1-10)</label>
+      <input type="number" id="score" name="score" min="1" max="10" required>
+    </div>
+    <div class="form-group">
+      <label for="content">Review</label>
+      <textarea id="content" name="content" rows="8" required></textarea>
+    </div>
+    <button type="submit" class="login-btn">Submit Review</button>
+  </form>
+</div>
 {%endblock main%}
