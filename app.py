@@ -94,7 +94,7 @@ def create_account_action():
         return redirect(url_for("index"))
 
 
-@app.route("/logout", methods=["POST"])
+@app.route("/logout", methods=["GET"])
 @login_required
 def logout_action():
     logout_user()
