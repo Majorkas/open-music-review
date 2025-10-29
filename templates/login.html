@@ -1,5 +1,22 @@
 {% set title = "Open Music Review - LogIn" %}
 {% extends "base.html" %}
 {%block main%}
+<div class="login-container">
+  <h2>Login</h2>
+  <form method="post" action="{{ url_for('login_action') }}">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit" class="login-btn">Login</button>
+  </form>
+  <div class="form-link">
+    Don't have an account? <a href="{{ url_for('create_account') }}">Sign up</a>
+  </div>
+</div>
 
 {%endblock main%}
