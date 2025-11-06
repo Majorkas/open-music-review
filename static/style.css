@@ -253,25 +253,25 @@ body {
   border: 1px solid #555;
 }
 
-/* Small action link */
 .review-actions {
   margin-top: 12px;
 }
+
 .review-actions a {
   color: #04AA6D;
   text-decoration: none;
   font-size: 14px;
 }
+
 .review-actions a:hover {
   text-decoration: underline;
 }
 
-/* Responsive tweak */
 @media (max-width: 600px) {
   .review-title { font-size: 18px; }
 }
 
-/* Admin submissions */
+/* Admin Panel Styles */
 .admin-container {
   max-width: 960px;
   margin: 40px auto;
@@ -344,9 +344,46 @@ body {
   text-align: center;
 }
 
+.user-actions {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.user-actions label {
+  color: #f2f2f2;
+  font-size: 14px;
+}
+
+.user-actions select {
+  padding: 8px 10px;
+  background-color: #555;
+  border: 1px solid #666;
+  border-radius: 4px;
+  color: #f2f2f2;
+  font-size: 14px;
+}
+
+.user-actions select:focus {
+  outline: none;
+  border-color: #04AA6D;
+  background-color: #666;
+}
+
+.user-actions .login-btn {
+  padding: 8px 12px;
+}
+
+@media (max-width: 600px) {
+  .user-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
 /* Index Page  */
-
-
 
 .home-header {
   max-width: 960px;
