@@ -59,4 +59,34 @@
     {% endfor %}
   {% endif %}
 </div>
+<div class="admin-container">
+  <h2 class="admin-title">Registered Users</h2>
+{% if users|length == 0 %}
+    <div class="submission-card">
+      <p class="submission-empty">No Users Registered Yet.</p>
+    </div>
+  {% else %}
+  {% for user in users %}
+    <article class="submission-card">
+      <div class="submission-header">
+        <h3 class="submission-name">{{ user.username }}</h3>
+        <span class="submission-id">User ID: {{ user.id }}</span>
+      </div>
+
+      <div class="submission-meta">
+        Privileges: <span class="submission-user">{{ 'Admin' if user.admin else 'User' }}</span>
+      </div>
+
+      <form class="user-actions" action='{{ url_for("edit_privilages", user_id=user.id) }}' method="POST">
+        <label for="admin_privileges_{{ user.id }}">Change Privileges:</label>
+        <select name="admin" id="admin_privileges_{{ user.id }}">
+          <option value="user" {% if not user.admin %}selected{% endif %}>User</option>
+          <option value="admin" {% if user.admin %}selected{% endif %}>Admin</option>
+        </select>
+        <button type="submit" class="login-btn">Update</button>
+      </form>
+    </article>
+  {%endfor%}
+{%endif%}
+
 {%endblock%}
