@@ -23,11 +23,7 @@ with app.app_context():
 
 with app.test_request_context():
     '''Make default Admin user so you can access the admin panel'''
-    admin = User(username="Admin") #type: ignore
-    admin.hash_password("admin")
-    admin.make_admin()
-    db.session.add(admin)
-    db.session.commit()
+
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -37,6 +33,17 @@ def load_user(user_id):
 def index():
     # picks random review to display as the
     # featured review on the home page
+    try:
+        admin = User.query.filter_by(id = "1").first()
+        admin.username == "Admin" #type: ignore
+        pass
+    except:
+        admin = User(username="Admin") #type: ignore
+        admin.hash_password("admin")
+        admin.make_admin()
+        db.session.add(admin)
+        db.session.commit()
+
     reviews = Review.query.all()
     random_review = random.choice(reviews) if reviews else None
     return render_template("index.html", featured_review=random_review)
@@ -224,7 +231,25 @@ def admin_page():
         flash("User Not Authorised")
         return redirect(url_for("index"))
     else:
-        return render_template("admin_view.html", forms = Form_Submission.query.all(), reports = User_Report.query.all())
+        return render_template("admin_view.html", forms = Form_Submission.query.all(), reports = User_Report.query.all(), users = User.query.all())
+
+
+@app.route('/AdminView/EditPrivilages/<int:user_id>', methods=["POST"])
+def edit_privilages(user_id):
+    user = current_user
+    if user.admin == False:
+        flash("User Not Authorised")
+        return redirect(url_for("index"))
+
+    user = User.query.filter_by(id = user_id).first()
+    privilages = request.form['admin']
+
+    if privilages == "admin":
+        user.make_admin() #type:ignore
+    else:
+        user.make_user() #type:ignore
+    flash("Role Updated")
+    return redirect(url_for("admin_page"))
 
 @app.errorhandler(NotFound)
 def page_not_found(error_message):
