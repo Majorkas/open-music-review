@@ -20,6 +20,12 @@ class User(UserMixin, db.Model):
 
     def make_admin(self):
         self.admin = True
+        db.session.commit()
+        return self.admin
+
+    def make_user(self):
+        self.admin = False
+        db.session.commit()
         return self.admin
 
     def hash_password(self, unhashed_password: str):
