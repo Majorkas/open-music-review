@@ -21,9 +21,6 @@ with app.app_context():
     db.init_app(app)
     db.create_all()
 
-with app.test_request_context():
-    '''Make default Admin user so you can access the admin panel'''
-
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -31,9 +28,13 @@ def load_user(user_id):
 
 @app.route("/")
 def index():
-    # picks random review to display as the
-    # featured review on the home page
+    '''
+     picks random review to display as the
+     featured review on the home page
+    '''
     try:
+        '''Make default Admin user so you can access the admin panel'''
+
         admin = User.query.filter_by(id = "1").first()
         admin.username == "Admin" #type: ignore
         pass
@@ -56,6 +57,7 @@ def login_page():
 
 @app.route("/login", methods=["POST"])
 def login_action():
+    '''Logs User In, checking the password with the validation function'''
     username = request.form["username"]
     password = request.form["password"]
     user = User.query.filter_by(username=username).first()
@@ -78,6 +80,7 @@ def create_account():
 
 @app.route("/create/account", methods=["POST"])
 def create_account_action():
+    '''Takes the form inputs and creates the account hashing the password for storage in the db '''
     username = request.form["username"]
     password = request.form["password"]
     confirm = request.form["confirm_password"]
@@ -121,6 +124,7 @@ def create_review():
 @app.route("/create/review", methods=["POST"])
 @login_required
 def create_review_action():
+    '''Takes all the form inputs and creates the review in the db'''
     review = Review (
 
             artist = request.form["artist"], #type: ignore
@@ -145,6 +149,7 @@ def contact():
 @app.route("/contact", methods=["POST"])
 @login_required
 def contact_action():
+    '''takes the from inputs and creates the form submission in the db'''
     form = Form_Submission(
         user = current_user, #type: ignore
         name = request.form["name"], #type: ignore
@@ -162,6 +167,7 @@ def contact_action():
 @app.route("/report/<int:review_id>", methods=["GET"])
 @login_required
 def report(review_id):
+    '''Action on the report button to take you to the page to write your reason for the review'''
     review = Review.query.filter_by(id = review_id).first()
     if not review:
         flash("Review not found", "error")
@@ -171,6 +177,7 @@ def report(review_id):
 @app.route("/delete/<int:review_id>", methods=["GET"])
 @login_required
 def delete_review(review_id):
+    '''Action for removing review in the admin panel only working if the user is an admin'''
     review = Review.query.filter_by(id = review_id).first()
     if not review:
         flash("Review not found", "error")
@@ -187,6 +194,7 @@ def delete_review(review_id):
 @app.route("/ignore/<int:report_id>", methods=["GET"])
 @login_required
 def ignore_report(report_id):
+    '''Action for ignoring the report only accesible if the user is an admin'''
     report = User_Report.query.filter_by(id = report_id)
     if not report:
         flash("Report not found", "error")
@@ -204,7 +212,7 @@ def ignore_report(report_id):
 @app.route("/report/<int:review_id>", methods=["POST"])
 @login_required
 def report_action(review_id):
-
+    '''Action that submits the report on the review for admins to view in the admin panel '''
     review = Review.query.filter_by(id = review_id).first()
     if not review:
         flash("Review not found", "error")
@@ -236,6 +244,7 @@ def admin_page():
 
 @app.route('/AdminView/EditPrivilages/<int:user_id>', methods=["POST"])
 def edit_privilages(user_id):
+    '''Action for editing a users privilages setting them to be an admin or making admins users again'''
     user = current_user
     if user.admin == False:
         flash("User Not Authorised")

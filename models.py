@@ -19,20 +19,24 @@ class User(UserMixin, db.Model):
         return f"This User is '{self.username}'"
 
     def make_admin(self):
+        '''Makes user an admin and commits to db'''
         self.admin = True
         db.session.commit()
         return self.admin
 
     def make_user(self):
+        '''Makes admin a user and commits to db'''
         self.admin = False
         db.session.commit()
         return self.admin
 
     def hash_password(self, unhashed_password: str):
+        '''hashes password for storage to db'''
         self.password = generate_password_hash(unhashed_password)
 
 
     def validate_password(self, unhashed_password: str):
+        '''Function to check the hashed password'''
         return check_password_hash(self.password, unhashed_password)
 
 class Review(db.Model):
@@ -52,6 +56,10 @@ class Review(db.Model):
         return f'{self.title} a review written by {self.author.username} with a score of {self.score} out of 100'
 
     def get_song_embed_code(self):
+        '''
+        takes the spotify link provided in the form cuts the song code out and inserts it into the embed link for use
+        in the review display
+        '''
         split = self.song_link.split("/")
         split = split[-1].split("?")
         code = split[0]
