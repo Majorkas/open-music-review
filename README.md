@@ -1,15 +1,24 @@
 # Open Music Review
 
+
+
 # Deployment
 A link to my [Repository](https://github.com/Majorkas/open-music-review) for the project and then
 
 The Website is hosted on Render [here](https://open-music-review.onrender.com).
+
+On first load of the index page the Admin user will be created with the following credentials:
+- Username: Admin
+- Password: admin
+
+this is just for testing purposes and should be changed immediately after first login by going to the Admin View page and editing the Admin user's privilages to make them a normal user again after creating a new admin user with a different username and password.
 
 For my deployment, I used Render.com to host the Flask application. I chose Render because it offers a straightforward way to deploy web applications with minimal configuration. It supports Python and Flask out of the box, making it easy to get my project website up and running quickly. 
 
 I also utilized a PostgreSQL database provided by Render to store user information and reviews. The integration between Flask and PostgreSQL was seamless.
 
 Creating and deploying is as simple as creating the db on Render, linking the GitHub repository, and setting the external db URL in your environment variables for database connection. One of the only problems with the Free version of the Db is that it only last for a month before needing to be recreated, but thankfully Render makes this process easy the only thing you have to do is create the new db and update the ENV variable to the new db URL.
+
 
 
 ## Overview
