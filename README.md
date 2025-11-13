@@ -17,7 +17,7 @@ For my deployment, I used Render.com to host the Flask application. I chose Rend
 
 I also utilized a PostgreSQL database provided by Render to store user information and reviews. The integration between Flask and PostgreSQL was seamless.
 
-Creating and deploying is as simple as creating the db on Render, linking the GitHub repository, and setting the external db URL in your environment variables for database connection. One of the only problems with the Free version of the Db is that it only last for a month before needing to be recreated, but thankfully Render makes this process easy the only thing you have to do is create the new db and update the ENV variable to the new db URL.
+Creating and deploying is as simple as creating the db on Render, linking the GitHub repository, making sure the start command is "gunicorn app:app" as we are using Gunicorn and setting the external db URL in your environment variables for database connection. One of the only problems with the Free version of the Db is that it only last for a month before needing to be recreated, but thankfully Render makes this process easy the only thing you have to do is create the new db and update the ENV variable to the new db URL.
 
 
 
